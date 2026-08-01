@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>签证资料收集系统</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root{--p:#1a73e8;--pd:#1557b0;--pl:#e8f0fe;--s:#34a853;--d:#ea4335;--bg:#f0f2f5;--c:#fff;--t:#1f1f1f;--ts:#5f6368;--b:#dadce0;--sh:0 1px 3px rgba(60,64,67,0.08),0 4px 12px rgba(60,64,67,0.05);--r:16px;--rs:12px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t);line-height:1.6;min-height:100vh;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+.hd{background:linear-gradient(135deg,var(--p) 0%,var(--pd) 100%);padding:28px 20px 44px;position:relative;overflow:hidden}
+.hd::before{content:'';position:absolute;top:-50%;right:-20%;width:300px;height:300px;background:rgba(255,255,255,0.05);border-radius:50%}
+.hd-c{position:relative;z-index:1}
+.hd h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:6px}
+.hd p{font-size:13px;color:rgba(255,255,255,0.85)}
+.bd{max-width:520px;margin:-24px auto 0;padding:0 16px 40px;position:relative;z-index:2}
+.pg{background:var(--c);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
+.pg-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.pg-t{font-size:14px;font-weight:600}
+.pg-x{font-size:12px;color:var(--p);font-weight:600}
+.pg-b{height:6px;background:#e8eaed;border-radius:3px;overflow:hidden}
+.pg-f{height:100%;background:linear-gradient(90deg,var(--p),var(--pd));border-radius:3px;transition:width .4s;width:0%}
+.ca{background:var(--c);border-radius:var(--r);padding:24px 20px;margin-bottom:16px;box-shadow:var(--sh)}
+.ca-t{font-size:16px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ca-i{width:28px;height:28px;background:var(--pl);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.ca-s{font-size:12px;color:var(--ts);margin-bottom:20px;padding-left:36px}
+.vs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:8px}
+.vo{position:relative;border:2px solid var(--b);border-radius:var(--rs);padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc}
+.vo:hover{border-color:var(--p)}
+.vo.on{border-color:var(--p);background:var(--pl);box-shadow:0 0 0 3px var(--pl)}
+.vo .fg{font-size:32px;margin-bottom:6px}
+.vo .nm{font-size:14px;font-weight:600}
+.vo .dc{font-size:11px;color:var(--ts);margin-top:2px}
+.vo input{position:absolute;opacity:0}
+.fg{margin-bottom:20px}
+.lb{display:block;font-size:14px;font-weight:600;margin-bottom:8px}
+.lb .rq{color:var(--d);margin-left:2px}
+.lb .op{color:var(--ts);font-weight:400;font-size:12px;margin-left:4px}
+.in,textarea{width:100%;padding:14px 16px;border:1.5px solid var(--b);border-radius:var(--rs);font-size:15px;font-family:inherit;color:var(--t);background:#fafbfc;transition:all .2s;-webkit-appearance:none}
+.in:focus,textarea:focus{outline:none;border-color:var(--p);background:#fff;box-shadow:0 0 0 3px var(--pl)}
+.in::placeholder,textarea::placeholder{color:#bdc1c6}
+.in.er{border-color:var(--d);background:#fce8e6}
+.sw{position:relative}
+.sw::after{content:'';position:absolute;right:16px;top:50%;transform:translateY(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid var(--ts);pointer-events:none}
+select.in{padding-right:40px}
+.rg{display:flex;gap:12px;flex-wrap:wrap}
+.ri{flex:1;min-width:100px}
+.ri input{display:none}
+.ri label{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border:1.5px solid var(--b);border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;background:#fafbfc;margin-bottom:0}
+.ri input:checked+label{border-color:var(--p);background:var(--pl);color:var(--p)}
+.uz{border:2px dashed var(--b);border-radius:var(--rs);padding:24px 16px;text-align:center;transition:all .3s;background:#fafbfc}
+.uz .ui{font-size:32px;margin-bottom:8px;opacity:.6}
+.uz .ut{font-size:14px;font-weight:600;margin-bottom:4px}
+.uz .uh{font-size:12px;color:var(--ts)}
+.hf{display:none}
+.ubg{display:flex;gap:10px;justify-content:center;margin-top:14px}
+.ubtn{flex:1;max-width:150px;padding:11px 8px;border:1.5px solid var(--p);border-radius:10px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;background:#fff;color:var(--p)}
+.ubtn:active{background:var(--pl)}
+.ubtn2{border-color:var(--b);color:var(--t)}
+.pv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.pi{aspect-ratio:1;border-radius:8px;overflow:hidden;position:relative;background:#f1f3f4;border:1px solid var(--b)}
+.pi img{width:100%;height:100%;object-fit:cover}
+.pi .rb{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pi .fb{position:absolute;bottom:4px;left:4px;background:var(--p);color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600}
+.ht{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--ts);margin-top:6px;line-height:1.5}
+.ht.wa{color:#b06000;background:#fef3e8;padding:8px 12px;border-radius:8px}
+.ht.if{color:var(--p);background:var(--pl);padding:8px 12px;border-radius:8px}
+.ht.ok{color:var(--s);background:#e6f4ea;padding:8px 12px;border-radius:8px}
+.bb{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--b);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;gap:12px;z-index:100}
+.bt{flex:1;padding:14px 20px;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.bt:active{transform:scale(.98)}
+.bt-p{background:linear-gradient(135deg,var(--p) 0%,var(--pd) 100%);color:#fff;box-shadow:0 2px 8px rgba(26,115,232,0.3)}
+.bt-p:disabled{background:#dadce0;box-shadow:none;color:#9aa0a6;cursor:not-allowed}
+.bt-s{background:#fff;color:var(--t);border:1.5px solid var(--b)}
+.sc{display:none;animation:fd .3s ease}
+.sc.on{display:block}
+@keyframes fd{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.hd2{display:none!important}
+.sp{text-align:center;padding:40px 20px}
+.sp .si{width:80px;height:80px;background:linear-gradient(135deg,var(--s),#2e7d32);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:40px;color:#fff;animation:sc .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes sc{from{transform:scale(0)}to{transform:scale(1)}}
+.sp h2{font-size:22px;font-weight:700;margin-bottom:8px}
+.sp p{font-size:14px;color:var(--ts);margin-bottom:24px}
+.rb2{background:var(--pl);border:1px solid var(--p);border-radius:var(--rs);padding:16px;margin:20px 0}
+.rb2 .lb2{font-size:12px;color:var(--ts);margin-bottom:4px}
+.rb2 .cd{font-size:20px;font-weight:700;color:var(--p);font-family:monospace}
+.tst{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-60px);background:rgba(31,31,31,0.9);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;z-index:200;transition:transform .3s;display:flex;align-items:center;gap:6px}
+.tst.on{transform:translateX(-50%) translateY(0)}
+.bs{height:80px}
+.ad{text-align:center;padding:20px}
+.ad a{color:var(--p);font-size:13px;text-decoration:none}
+.wt{background:linear-gradient(135deg,#07c160,#059e4c);color:#fff;padding:12px 16px;border-radius:var(--rs);font-size:13px;margin-bottom:16px;display:none;align-items:center;gap:8px}
+.md{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-left:8px}
+.md-of{background:#fce8e6;color:#c5221f}
+.md-em{background:#e6f4ea;color:#137333}
+.cm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:20px}
+.cm-c{background:#fff;border-radius:var(--r);max-width:420px;width:100%;max-height:90vh;overflow-y:auto;padding:24px}
+</style>
+</head>
+<body>
+<div class="tst" id="at"><span>💾</span>已自动保存草稿</div>
+<div class="hd"><div class="hd-c"><h1>🌍 签证资料收集系统</h1><p>请选择签证类型并填写资料，我们将协助您完成申请</p><div class="badge"><span id="mi" class="md md-of">离线模式</span><span>🔒</span>信息加密传输，仅用于签证申请</div></div></div>
+<div class="bd">
+<div class="wt" id="wt"><span>💡</span><span>点击右上角「···」收藏本页面，方便随时填写</span></div>
+<div class="pg" id="pb"><div class="pg-h"><span class="pg-t">填写进度</span><span class="pg-x" id="px">1 / 4</span></div><div class="pg-b"><div class="pg-f" id="pf"></div></div></div>
+<form id="vf">
+<div class="sc on" data-s="1">
+<div class="ca"><div class="ca-t"><span class="ca-i">🌐</span>选择签证类型</div><div class="ca-s">不同国家需要填写的资料不同</div>
+<div class="vs">
+<div class="vo on" onclick="sv('usa',this)"><input type="radio" name="vt" value="usa" checked><div class="fg">🇺🇸</div><div class="nm">美国</div><div class="dc">DS-160 非移民签证</div></div>
+<div class="vo" onclick="sv('france',this)"><input type="radio" name="vt" value="france"><div class="fg">🇫🇷</div><div class="nm">法国/申根</div><div class="dc">旅游/商务/探亲</div></div>
+<div class="vo" onclick="sv('canada',this)"><input type="radio" name="vt" value="canada"><div class="fg">🇨🇦</div><div class="nm">加拿大</div><div class="dc">访客/探亲/商务</div></div>
+<div class="vo" onclick="sv('uk',this)"><input type="radio" name="vt" value="uk"><div class="fg">🇬🇧</div><div class="nm">英国</div><div class="dc">旅游/学生/工作</div></div>
+</div></div>
+<div class="ca"><div class="ca-t"><span class="ca-i">👤</span>基础信息</div><div class="ca-s">用于文件归类和身份识别</div>
+<div class="fg"><label>申请人姓名（中文）<span class="rq">*</span></label><input type="text" class="in" id="cn" name="cn" placeholder="例如：张三" required></div>
+<div class="fg"><label>姓名拼音<span class="rq">*</span></label><input type="text" class="in" id="ce" name="ce" placeholder="例如：ZHANG SAN" style="text-transform:uppercase"></div>
+<div class="fg"><label>护照号码<span class="rq">*</span></label><input type="text" class="in" id="pn" name="pn" placeholder="例如：E12345678" style="text-transform:uppercase" maxlength="9"></div>
+<div class="fg"><label>联系电话<span class="rq">*</span></label><input type="tel" class="in" id="ph" name="ph" placeholder="例如：+86 13800138000"></div>
+<div class="fg"><label>电子邮箱<span class="rq">*</span></label><input type="email" class="in" id="em" name="em" placeholder="用于接收确认通知"></div>
+</div></div>
+
+<div class="sc" data-s="2">
+<div class="ca"><div class="ca-t"><span class="ca-i">📄</span>护照首页</div><div class="ca-s">请上传清晰的护照资料页照片</div>
+<div class="fg"><div class="uz"><div class="ui">📷</div><div class="ut">添加护照首页照片</div><div class="uh">支持 JPG、PNG、PDF</div><div class="ubg"><label class="ubtn" for="p1c">📷 拍照</label><label class="ubtn ubtn2" for="p1l">🖼️ 相册/文件</label></div><input type="file" id="p1c" accept="image/*" capture="environment" class="hf"><input type="file" id="p1l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp1"></div><div class="ht if"><span>💡</span><span>可拍照，也可从相册或文件中选择，请确保照片清晰、四角完整</span></div></div></div>
+<div class="ca"><div class="ca-t"><span class="ca-i">🪪</span>身份证正反面</div><div class="ca-s">需上传身份证正面和反面两张照片</div>
+<div class="fg"><div class="uz"><div class="ui">📸</div><div class="ut">添加身份证正反面</div><div class="uh">可一次选择多张照片</div><div class="ubg"><label class="ubtn" for="p2c">📷 拍照</label><label class="ubtn ubtn2" for="p2l">🖼️ 相册/文件</label></div><input type="file" id="p2c" accept="image/*" capture="environment" class="hf"><input type="file" id="p2l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp2"></div></div></div>
+<div class="ca"><div class="ca-t"><span class="ca-i">🖼️</span>签证照片</div><div class="ca-s" id="pd">51mm × 51mm 白底近照（美国标准）</div>
+<div class="fg"><div class="uz"><div class="ui">🤳</div><div class="ut">添加签证照片</div><div class="uh" id="ph2">白底、免冠、不戴眼镜</div><div class="ubg"><label class="ubtn" for="p3c">🤳 拍照</label><label class="ubtn ubtn2" for="p3l">🖼️ 相册/文件</label></div><input type="file" id="p3c" accept="image/*" capture="user" class="hf"><input type="file" id="p3l" accept="image/*" class="hf"></div><div class="pv hd2" id="pp3"></div><div class="ht wa" id="pw"><span>⚠️</span><span>照片要求：6个月内近照、白底、正面免冠、不佩戴眼镜、露出双耳</span></div></div></div>
+</div>
+
+<div class="sc" data-s="3">
+<div id="cem">
+<div class="ca"><div class="ca-t"><span class="ca-i">💼</span>职业信息</div><div class="ca-s">请如实填写您的职业状况</div>
+<div class="fg"><label>就业类型<span class="rq">*</span></label><div class="rg"><div class="ri"><input type="radio" id="e1" name="et" value="employed" checked><label for="e1">受雇员工</label></div><div class="ri"><input type="radio" id="e2" name="et" value="self"><label for="e2">自雇/个体户</label></div><div class="ri"><input type="radio" id="e3" name="et" value="student"><label for="e3">学生</label></div><div class="ri"><input type="radio" id="e4" name="et" value="retired"><label for="e4">退休</label></div></div></div>
+<div id="ef"><div class="fg"><label>工作单位及职务<span class="rq">*</span></label><textarea class="in" id="wd" rows="3" placeholder="单位名称、详细地址、职务、月薪、入职时间、单位电话"></textarea></div></div>
+<div id="sf" class="hd2"><div class="fg"><label>店铺/公司信息<span class="rq">*</span></label><textarea class="in" id="bi" rows="3" placeholder="公司/店铺名称、注册时间、详细地址、经营范围、月均收入、员工数量"></textarea></div><div class="fg"><label>营业执照/税务证明<span class="op">选填</span></label><div class="uz"><div class="ui">📁</div><div class="ut">上传营业执照等</div><div class="ubg"><label class="ubtn" for="p4c">📷 拍照</label><label class="ubtn ubtn2" for="p4l">🖼️ 相册/文件</label></div><input type="file" id="p4c" accept="image/*" capture="environment" class="hf"><input type="file" id="p4l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp4"></div></div></div>
+<div id="stf" class="hd2"><div class="fg"><label>学校信息<span class="rq">*</span></label><textarea class="in" id="si" rows="2" placeholder="学校名称、地址、专业、在读年级"></textarea></div></div>
+</div>
+<div class="ca"><div class="ca-t"><span class="ca-i">💰</span>财务证明</div><div class="ca-s">证明您有足够的资金支持此次旅行</div>
+<div class="fg"><label>银行流水/存款证明<span class="op">选填</span></label><div class="uz"><div class="ui">🏦</div><div class="ut">上传银行流水或存款证明</div><div class="uh">建议提供近3-6个月流水</div><div class="ubg"><label class="ubtn" for="p5c">📷 拍照</label><label class="ubtn ubtn2" for="p5l">🖼️ 相册/文件</label></div><input type="file" id="p5c" accept="image/*" capture="environment" class="hf"><input type="file" id="p5l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp5"></div></div>
+<div class="fg"><label>其他资产证明<span class="op">选填</span></label><textarea class="in" id="ai" rows="2" placeholder="房产、车辆、股票、基金等（如有）"></textarea></div></div>
+</div>
+
+<div id="fe" class="hd2">
+<div class="ca"><div class="ca-t"><span class="ca-i">✈️</span>行程信息</div><div class="ca-s">申根签证需要提供详细行程</div>
+<div class="fg"><label>旅行目的<span class="rq">*</span></label><div class="sw"><select class="in" id="tp"><option value="tourism">旅游观光</option><option value="business">商务访问</option><option value="family">探亲访友</option><option value="medical">医疗</option></select></div></div>
+<div class="fg"><label>计划入境日期<span class="rq">*</span></label><input type="date" class="in" id="ed"></div>
+<div class="fg"><label>计划离境日期<span class="rq">*</span></label><input type="date" class="in" id="xd"></div>
+<div class="fg"><label>主要目的地城市<span class="rq">*</span></label><input type="text" class="in" id="dc" placeholder="例如：巴黎、里昂"></div>
+<div class="fg"><label>酒店预订/住宿地址<span class="rq">*</span></label><textarea class="in" id="hi" rows="2" placeholder="酒店名称、地址、预订号（如有）"></textarea></div>
+<div class="fg"><label>申根旅游保险单号<span class="rq">*</span></label><input type="text" class="in" id="in2" placeholder="保险单号"><div class="ht if"><span>ℹ️</span><span>申根签证要求保险覆盖全程，保额≥3万欧元</span></div></div>
+<div class="fg"><label>保险单上传<span class="rq">*</span></label><div class="uz"><div class="ui">🛡️</div><div class="ut">上传保险单</div><div class="ubg"><label class="ubtn" for="p6c">📷 拍照</label><label class="ubtn ubtn2" for="p6l">🖼️ 相册/文件</label></div><input type="file" id="p6c" accept="image/*" capture="environment" class="hf"><input type="file" id="p6l" accept="image/*,.pdf" class="hf"></div><div class="pv hd2" id="pp6"></div></div></div>
+<div class="ca"><div class="ca-t"><span class="ca-i">📋</span>旅行历史</div><div class="fg"><label>近5年申根签证记录<span class="op">选填</span></label><textarea class="in" id="sh" rows="3" placeholder="例如：&#10;2023年 法国旅游签 有效期30天&#10;2022年 德国商务签 有效期90天"></textarea></div></div>
+</div>
+
+<div id="cae" class="hd2">
+<div class="ca"><div class="ca-t"><span class="ca-i">🍁</span>加拿大补充信息</div>
+<div class="fg"><label>UCI 号码（如有）<span class="op">选填</span></label><input type="text" class="in" id="uc" placeholder="过往加拿大签证上的UCI号码"><div class="ht if"><span>ℹ️</span><span>如曾申请过加拿大签证，请填写UCI号码</span></div></div>
+<div class="fg"><label>旅行目的<span class="rq">*</span></label><div class="sw"><select class="in" id="cp"><option value="tourism">旅游观光</option><option value="family">探亲访友</option><option value="business">商务访问</option></select></div></div>
+<div class="fg"><label>加拿大邀请人/联系人（如有）<span class="op">选填</span></label><textarea class="in" id="cc" rows="2" placeholder="姓名、关系、地址、电话"></textarea></div>
+<div class="fg"><label>美加旅行历史<span class="op">选填</span></label><textarea class="in" id="ch" rows="2" placeholder="过往美国/加拿大签证及出入境记录"></textarea></div></div>
+</div>
+
+<div id="uke" class="hd2">
+<div class="ca"><div class="ca-t"><span class="ca-i">🇬🇧</span>英国补充信息</div>
+<div class="fg"><label>签证类别<span class="rq">*</span></label><div class="sw"><select class="in" id="uk"><option value="standard">普通访客签证（旅游/探亲）</option><option value="student">学生签证</option><option value="work">工作签证</option><option value="business">商务访客</option></select></div></div>
+<div class="fg"><label>CAS 号码（学生签必填）<span class="op">选填</span></label><input type="text" class="in" id="ca2" placeholder="学校发放的CAS号码"></div>
+<div class="fg"><label>肺结核检测证书<span class="op">选填</span></label><div class="uz"><div class="ui">🏥</div><div class="ut">上传TB检测证书</div><div class="uh">停留超过6个月需提供</div><div class="ubg"><label class="ubtn" for="p7c">📷 拍照</label><label class="ubtn ubtn2" for="p7l">🖼️ 相册/文件</label></div><input type="file" id="p7c" accept="image/*" capture="environment" class="hf"><input type="file" id="p7l" accept="image/*,.pdf" class="hf"></div><div class="pv hd2" id="pp7"></div></div>
+<div class="fg"><label>英国住宿安排<span class="op">选填</span></label><textarea class="in" id="ua" rows="2" placeholder="酒店地址、学校宿舍、或租房信息"></textarea></div></div>
+</div>
+</div>
+
+<div class="sc" data-s="4">
+<div class="ca"><div class="ca-t"><span class="ca-i">👨‍👩‍👧‍👦</span>家庭信息</div><div class="ca-s">父母、配偶、子女的基本信息（请详细填写）</div>
+<div class="fg"><label>家庭成员信息（概述）<span class="rq">*</span></label><textarea class="in" id="fi" rows="5" placeholder="请按以下格式填写：&#10;&#10;父亲：姓名、出生日期、现居住地&#10;母亲：姓名、出生日期、现居住地&#10;配偶：姓名、出生日期、身份证号/护照号&#10;子女：姓名、出生日期（如有）"></textarea><div class="ht"><span>💡</span><span>如家人在目的地国家，请特别注明其身份状态</span></div></div></div>
+
+<div class="ca">
+  <div class="ca-t"><span class="ca-i">👪</span>配偶及直系亲属详细信息</div>
+  <div class="ca-s">请分别填写配偶、父母、子女的姓名、出生日期，及是否一同前往美国</div>
+  <div class="fg"><label>配偶姓名</label><input type="text" class="in" id="spouse_name" placeholder="如：张三"></div>
+  <div class="fg"><label>配偶出生日期</label><input type="date" class="in" id="spouse_dob"></div>
+  <div class="fg"><label><input type="checkbox" id="spouse_accompany"> 配偶是否一同前往美国</label></div>
+  <div class="fg"><label>父亲姓名</label><input type="text" class="in" id="father_name" placeholder="如：张父"></div>
+  <div class="fg"><label>父亲出生日期</label><input type="date" class="in" id="father_dob"></div>
+  <div class="fg"><label><input type="checkbox" id="father_accompany"> 父亲是否一同前往美国</label></div>
+  <div class="fg"><label>母亲姓名</label><input type="text" class="in" id="mother_name" placeholder="如：张母"></div>
+  <div class="fg"><label>母亲出生日期</label><input type="date" class="in" id="mother_dob"></div>
+  <div class="fg"><label><input type="checkbox" id="mother_accompany"> 母亲是否一同前往美国</label></div>
+  <div class="fg"><label>子女1姓名</label><input type="text" class="in" id="child1_name" placeholder="如有多个子女，请填写最长子女"></div>
+  <div class="fg"><label>子女1出生日期</label><input type="date" class="in" id="child1_dob"></div>
+  <div class="fg"><label><input type="checkbox" id="child1_accompany"> 子女1是否一同前往美国</label></div>
+  <div class="fg"><label>子女2姓名</label><input type="text" class="in" id="child2_name" placeholder="如有第二个子女"></div>
+  <div class="fg"><label>子女2出生日期</label><input type="date" class="in" id="child2_dob"></div>
+  <div class="fg"><label><input type="checkbox" id="child2_accompany"> 子女2是否一同前往美国</label></div>
+  <div class="ht if"><span>💡</span><span>如无配偶或子女，可留空；直系亲属指父母、配偶、子女</span></div>
+</div>
+
+<div class="ca">
+  <div class="ca-t"><span class="ca-i">🏠</span>居住地址与背景</div>
+  <div class="ca-s">请提供现住址、护照回邮地址及拒签记录</div>
+  <div class="fg"><label>现居住详细地址<span class="rq">*</span></label><textarea class="in" id="home_address" rows="3" placeholder="街道、门牌号、城市、省份、邮编"></textarea></div>
+  <div class="fg"><label>房屋所有权</label>
+    <div class="sw"><select class="in" id="home_ownership"><option value="own">自购</option><option value="rent">租赁</option><option value="other">其他</option></select></div>
+  </div>
+  <div class="fg"><label><input type="checkbox" id="same_mail"> 护照回邮地址同现住址</label></div>
+  <div class="fg"><label>护照回邮地址（如不同请填写）</label><textarea class="in" id="mail_address" rows="3" placeholder="用于接收护照的地址"></textarea></div>
+  <div class="fg"><label>是否有过签证拒签记录？</label>
+    <div class="rg"><div class="ri"><input type="radio" id="refusal_no" name="refusal" value="no" checked><label for="refusal_no">否</label></div><div class="ri"><input type="radio" id="refusal_yes" name="refusal" value="yes"><label for="refusal_yes">是</label></div></div>
+  </div>
+  <div id="refusal_details_div" class="hd2">
+    <div class="fg"><label>拒签详情（请说明国家、日期、原因）</label><textarea class="in" id="refusal_details" rows="3" placeholder="例如：2022年美国B1/B2拒签，原因是214(b)"></textarea></div>
+  </div>
+</div>
+
+<div id="us" class="ca"><div class="ca-t"><span class="ca-i">💬</span>社交媒体账号</div><div class="ca-s">DS-160要求申报近5年使用过的社交媒体</div>
+<div class="fg"><label>社交平台账号<span class="rq">*</span></label><textarea class="in" id="sm" rows="3" placeholder="例如：&#10;微信：微信号xxx&#10;抖音：抖音号xxx&#10;Instagram：账号xxx&#10;Facebook：账号xxx（如有）"></textarea><div class="ht if"><span>ℹ️</span><span>请尽量完整填写，没有账号可填&quot;无&quot;</span></div></div></div>
+<div class="ca" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1px solid #c8e6c9;"><div class="fg" style="margin-bottom:0"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="cf" style="width:18px;height:18px;accent-color:var(--s)"><span style="font-size:14px">我确认以上填写的所有信息真实准确，理解虚假陈述可能导致签证拒签</span></label></div></div>
+</div>
+
+<div class="sc" data-s="ok">
+<div class="ca sp"><div class="si">✓</div><h2>资料提交成功！</h2><p id="sm2">您的资料已打包，请下载后发送给顾问。</p><div class="rb2"><div class="lb2">申请编号（请截图保存）</div><div class="cd" id="rn"></div></div><div id="da" style="margin-top:20px"><button class="bt bt-p" onclick="dl()" style="width:100%;margin-bottom:12px">📥 下载资料包 (ZIP)</button><div class="ht if"><span>💡</span><span>下载后请通过微信/邮件发送给您的签证顾问</span></div></div><div id="ea" style="margin-top:20px"><div class="ht ok" id="mailStatus"><span>✅</span><span>正在发送通知邮件…</span></div></div></div>
+</div>
+<div class="bs"></div>
+</form>
+<div class="ad"><a href="#" onclick="openConfig();return false">⚙️ 顾问配置面板</a></div>
+</div>
+
+<div class="bb" id="bb"><button type="button" class="bt bt-s hd2" id="pb2" onclick="cs2(-1)">← 上一步</button><button type="button" class="bt bt-p" id="nb" onclick="cs2(1)">下一步 →</button></div>
+
+<div class="cm" id="cm"><div class="cm-c"><h3 style="margin-bottom:16px">⚙️ 顾问配置面板</h3><p style="font-size:13px;color:var(--ts);margin-bottom:16px">配置后，客户提交的资料将自动发送到您指定的邮箱。</p>
+<div class="fg"><label>接收邮箱</label><input type="email" class="in" id="cem2" placeholder="例如：jason0312chan@gmail.com"></div>
+<div class="fg"><label>EmailJS Public Key <span class="op">可选</span></label><input type="text" class="in" id="cek" placeholder="从 emailjs.com 获取"><div class="ht if"><span>ℹ️</span><span>不填则使用「下载资料包」模式</span></div></div>
+<div class="fg"><label>EmailJS Service ID <span class="op">可选</span></label><input type="text" class="in" id="ces" placeholder="例如：service_xxx"></div>
+<div class="fg"><label>EmailJS Template ID <span class="op">可选</span></label><input type="text" class="in" id="cet" placeholder="例如：template_xxx"></div>
+<button class="bt bt-p" onclick="saveConfig()" style="width:100%">保存配置</button>
+<button class="bt bt-s" onclick="document.getElementById('cm').style.display='none'" style="width:100%;margin-top:8px">取消</button>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--b)"><p style="font-size:12px;color:var(--ts);line-height:1.6"><strong>两种模式：</strong><br><br><strong>A：自动发邮件（推荐）</strong><br>注册 emailjs.com → 绑定Gmail → 创建Template → 填入参数。客户提交后资料自动发到您邮箱。<br><br><strong>B：离线下载（零配置）</strong><br>不填任何参数，客户提交后生成ZIP资料包，自行通过微信/邮件发给您。</p></div>
+</div></div>
+<script>
+let C=JSON.parse(localStorage.getItem('vc')||'null')||{email:'jason0312chan@gmail.com',key:'X7T9PqnsBhSlJMJC_',sid:'service_lfxxxmz',tid:'template_contact'}, step=1, totalSteps=4, currentVisa='usa', fileMap={}, formData={};
+
+function updateModeIndicator(){const on=!!(C.key&&C.sid&&C.tid);const mi=document.getElementById('mi');mi.textContent=on?'自动邮件已配置':'离线模式';mi.className='md '+(on?'md-em':'md-of')}
+
+function sv(t,e){currentVisa=t;document.querySelectorAll('.vo').forEach(o=>o.classList.remove('on'));e.classList.add('on');e.querySelector('input').checked=true;updateVisa();autoSave()}
+function updateVisa(){const s={usa:{d:'51mm × 51mm 白底近照（美国标准）',h:'白底、免冠、不戴眼镜'},france:{d:'35mm × 45mm 白底/浅灰底（申根标准）',h:'白底或浅灰底、正面免冠'},canada:{d:'35mm × 45mm 白底近照（加拿大标准）',h:'白底、正面、清晰露出五官'},uk:{d:'45mm × 35mm 白底近照（英国标准）',h:'白底、正面、无表情、不戴眼镜'}};document.getElementById('pd').textContent=s[currentVisa].d;document.getElementById('ph2').textContent=s[currentVisa].h;document.getElementById('fe').classList.toggle('hd2',currentVisa!=='france');document.getElementById('cae').classList.toggle('hd2',currentVisa!=='canada');document.getElementById('uke').classList.toggle('hd2',currentVisa!=='uk');document.getElementById('us').classList.toggle('hd2',currentVisa!=='usa')}
+
+// 修复点：不再使用可能不被部分手机浏览器/微信内置浏览器支持的复杂 :not() 选择器，
+// 改为纯 JS 过滤隐藏区域（.hd2 祖先）内的 required 字段，避免 querySelectorAll 抛错导致按钮失效卡死。
+function getVisibleRequireds(container){
+  return Array.from(container.querySelectorAll('[required]')).filter(el=>!el.closest('.hd2'));
+}
+
+function validateStep(s){
+  try{
+    const container=document.querySelector(`.sc[data-s="${s}"]`);
+    if(!container) return true;
+    let valid=true;
+    getVisibleRequireds(container).forEach(el=>{
+      if(!el.value || !el.value.trim()){
+        el.classList.add('er');valid=false;
+        if(navigator.vibrate) navigator.vibrate(50);
+        el.scrollIntoView({behavior:'smooth',block:'center'});
+      }else el.classList.remove('er');
+    });
+    if(s===1){
+      const passport=document.getElementById('pn').value;
+      if(passport && !/^[A-Z0-9]{6,9}$/i.test(passport)){document.getElementById('pn').classList.add('er');alert('护照号码格式不正确');return false}
+      const email=document.getElementById('em').value;
+      if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('em').classList.add('er');alert('邮箱格式不正确');return false}
+    }
+    if(s===4 && !document.getElementById('cf').checked){alert('请勾选确认信息真实准确');return false}
+    return valid;
+  }catch(err){
+    console.error('validateStep error:',err);
+    return true; // 校验本身异常时不阻塞用户填写流程
+  }
+}
+
+function cs2(delta){
+  try{
+    if(delta>0 && !validateStep(step)) return;
+    let newStep=step+delta;
+    if(newStep<1 || newStep>totalSteps){ if(newStep>totalSteps) submitForm(); return }
+    document.querySelector(`.sc[data-s="${step}"]`).classList.remove('on');
+    step=newStep;
+    document.querySelector(`.sc[data-s="${step}"]`).classList.add('on');
+    updateProgress();updateButtons();autoSave();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(err){
+    console.error('cs2 error:',err);
+    alert('页面出现问题，请刷新后重试');
+  }
+}
+
+function updateProgress(){document.getElementById('pf').style.width=((step-1)/(totalSteps-1))*100+'%';document.getElementById('px').textContent=step+' / '+totalSteps}
+function updateButtons(){document.getElementById('pb2').classList.toggle('hd2',step===1);document.getElementById('nb').innerHTML=step===totalSteps?'提交资料 ✓':'下一步 →'}
+
+document.querySelectorAll('input[name="et"]').forEach(r=>{r.addEventListener('change',function(){document.getElementById('ef').classList.toggle('hd2',this.value!=='employed');document.getElementById('sf').classList.toggle('hd2',this.value!=='self');document.getElementById('stf').classList.toggle('hd2',this.value!=='student');autoSave()})});
+
+function initUpload(camId, libId, previewId, key){const preview=document.getElementById(previewId);const cam=document.getElementById(camId);const lib=document.getElementById(libId);if(cam)cam.addEventListener('change',function(){handleFiles(this.files, preview, key);this.value=''});if(lib)lib.addEventListener('change',function(){handleFiles(this.files, preview, key);this.value=''})}
+
+function handleFiles(files, preview, id){if(!files.length)return;preview.classList.remove('hd2');if(!fileMap[id])fileMap[id]=[];Array.from(files).forEach(file=>{fileMap[id].push(file);const div=document.createElement('div');div.className='pi';if(file.type.startsWith('image/')){const reader=new FileReader();reader.onload=e=>{div.innerHTML=`<img src="${e.target.result}"><button type="button" class="rb" onclick="removeFile(this,'${id}','${file.name}')">×</button>`};reader.readAsDataURL(file)}else{div.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:24px">📄</div><span class="fb">PDF</span><button type="button" class="rb" onclick="removeFile(this,'${id}','${file.name}')">×</button>`}preview.appendChild(div)});autoSave()}
+
+function removeFile(btn, id, fileName){btn.closest('.pi').remove();if(fileMap[id])fileMap[id]=fileMap[id].filter(f=>f.name!==fileName);const preview=btn.closest('.pv');if(!preview.children.length)preview.classList.add('hd2')}
+
+initUpload('p1c','p1l','pp1','p1');initUpload('p2c','p2l','pp2','p2');initUpload('p3c','p3l','pp3','p3');initUpload('p4c','p4l','pp4','p4');initUpload('p5c','p5l','pp5','p5');initUpload('p6c','p6l','pp6','p6');initUpload('p7c','p7l','pp7','p7');
+
+function autoSave(){try{const data={visa:currentVisa, step:step};document.querySelectorAll('#vf input,#vf textarea,#vf select').forEach(el=>{if(el.type==='radio'){if(el.checked) data[el.name]=el.value}else if(el.type==='checkbox') data[el.id]=el.checked;else data[el.name||el.id]=el.value});localStorage.setItem('vc_d',JSON.stringify(data));localStorage.setItem('vc_t',new Date().toISOString());const toast=document.getElementById('at');toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),2000)}catch(err){console.error('autoSave error:',err)}}
+
+function loadDraft(){try{const draft=localStorage.getItem('vc_d');if(!draft)return;const data=JSON.parse(draft);const time=localStorage.getItem('vc_t');if(time&&(new Date()-new Date(time))/(1000*60*60*24)>7){localStorage.removeItem('vc_d');localStorage.removeItem('vc_t');return}if(confirm('检测到未提交的草稿，是否恢复？')){if(data.visa){currentVisa=data.visa;document.querySelectorAll('.vo').forEach(o=>{const val=o.querySelector('input').value===currentVisa;o.classList.toggle('on',val);o.querySelector('input').checked=val});updateVisa()}Object.keys(data).forEach(k=>{const el=document.querySelector(`[name="${k}"],#${k}`);if(el){if(el.type==='radio'){const radio=document.querySelector(`[name="${k}"][value="${data[k]}"]`);if(radio){radio.checked=true;radio.dispatchEvent(new Event('change'))}}else if(el.type==='checkbox')el.checked=data[k];else el.value=data[k]}});if(data.step){step=data.step;document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.querySelector(`.sc[data-s="${step}"]`).classList.add('on');updateProgress();updateButtons()}}}catch(e){console.error('loadDraft error:',e)}}
+
+document.querySelectorAll('input,textarea,select').forEach(el=>{el.addEventListener('input',debounce(autoSave,1000));el.addEventListener('change',autoSave)});
+function debounce(fn,delay){let timer;return(...args)=>{clearTimeout(timer);timer=setTimeout(()=>fn(...args),delay)}}
+
+// 拒签历史切换
+document.querySelectorAll('input[name="refusal"]').forEach(r => {
+  r.addEventListener('change', function() {
+    document.getElementById('refusal_details_div').classList.toggle('hd2', this.value === 'no');
+  });
+});
+// 回邮地址联动
+const homeAddr = document.getElementById('home_address');
+const mailAddr = document.getElementById('mail_address');
+const sameMail = document.getElementById('same_mail');
+sameMail.addEventListener('change', function() {
+  if (this.checked) { mailAddr.value = homeAddr.value; mailAddr.disabled = true; }
+  else { mailAddr.disabled = false; mailAddr.value = ''; }
+});
+homeAddr.addEventListener('input', function() { if (sameMail.checked) mailAddr.value = this.value; });
+
+async function submitForm(){const btn=document.getElementById('nb');btn.disabled=true;btn.innerHTML='<span>⏳</span>处理中...';const ref=currentVisa.toUpperCase()+'-'+Date.now().toString(36).toUpperCase();formData={visa:currentVisa, ref:ref, submitted:new Date().toLocaleString('zh-CN'), name:document.getElementById('cn').value, pinyin:document.getElementById('ce').value, passport:document.getElementById('pn').value, phone:document.getElementById('ph').value, email:document.getElementById('em').value, employment:document.querySelector('input[name="et"]:checked')?.value||'', work:document.getElementById('wd')?.value||'', business:document.getElementById('bi')?.value||'', school:document.getElementById('si')?.value||'', assets:document.getElementById('ai')?.value||'', family:document.getElementById('fi').value, social:document.getElementById('sm')?.value||'', travelPurpose:document.getElementById('tp')?.value||'', entryDate:document.getElementById('ed')?.value||'', exitDate:document.getElementById('xd')?.value||'', destination:document.getElementById('dc')?.value||'', hotel:document.getElementById('hi')?.value||'', insurance:document.getElementById('in2')?.value||'', history:document.getElementById('sh')?.value||'', uci:document.getElementById('uc')?.value||'', canadaPurpose:document.getElementById('cp')?.value||'', canadaContact:document.getElementById('cc')?.value||'', canadaHistory:document.getElementById('ch')?.value||'', ukType:document.getElementById('uk')?.value||'', cas:document.getElementById('ca2')?.value||'', ukAccommodation:document.getElementById('ua')?.value||'',
+spouse_name:document.getElementById('spouse_name').value,
+spouse_dob:document.getElementById('spouse_dob').value,
+spouse_accompany:document.getElementById('spouse_accompany').checked,
+father_name:document.getElementById('father_name').value,
+father_dob:document.getElementById('father_dob').value,
+father_accompany:document.getElementById('father_accompany').checked,
+mother_name:document.getElementById('mother_name').value,
+mother_dob:document.getElementById('mother_dob').value,
+mother_accompany:document.getElementById('mother_accompany').checked,
+child1_name:document.getElementById('child1_name').value,
+child1_dob:document.getElementById('child1_dob').value,
+child1_accompany:document.getElementById('child1_accompany').checked,
+child2_name:document.getElementById('child2_name').value,
+child2_dob:document.getElementById('child2_dob').value,
+child2_accompany:document.getElementById('child2_accompany').checked,
+home_address:document.getElementById('home_address').value,
+home_ownership:document.getElementById('home_ownership').value,
+mail_address:document.getElementById('mail_address').value,
+refusal:document.querySelector('input[name="refusal"]:checked')?.value||'no',
+refusal_details:document.getElementById('refusal_details').value,
+};document.querySelectorAll('.sc').forEach(e=>e.classList.remove('on'));document.querySelector('.sc[data-s="ok"]').classList.add('on');document.getElementById('rn').textContent=ref;document.getElementById('bb').style.display='none';document.getElementById('pb').style.display='none';document.getElementById('px').textContent='完成';document.getElementById('pf').style.width='100%';document.getElementById('sm2').textContent='您的资料已打包完成，请下载后发送给顾问（图片资料需通过下载的ZIP发送，邮件仅发送文字摘要）。';document.getElementById('da').classList.remove('hd2');localStorage.removeItem('vc_d');localStorage.removeItem('vc_t');if(navigator.vibrate)navigator.vibrate([100,50,100]);sendNotifyEmail()}
+
+function buildSummaryText(){const f=formData;return `新签证资料提交\n编号：${f.ref}\n签证类型：${f.visa}\n姓名：${f.name}（${f.pinyin}）\n护照号：${f.passport}\n电话：${f.phone}\n邮箱：${f.email}\n提交时间：${f.submitted}\n\n注意：本邮件仅为文字摘要，护照/身份证/照片等图片资料请查看客户下载并发送的ZIP资料包。`}
+
+async function sendNotifyEmail(){
+  const statusEl=document.getElementById('mailStatus');
+  if(!(C.key && C.sid && C.tid)){statusEl.parentElement.classList.add('hd2');return}
+  statusEl.parentElement.classList.remove('hd2');
+  statusEl.className='ht ok';statusEl.innerHTML='<span>⏳</span><span>正在发送通知邮件…</span>';
+  try{
+    if(typeof emailjs==='undefined') throw new Error('EmailJS SDK 未加载成功（请检查网络或CDN是否可访问）');
+    emailjs.init({publicKey:C.key});
+    const params={to_email:C.email||'', ref:formData.ref, visa:formData.visa, name:formData.name, pinyin:formData.pinyin, passport:formData.passport, phone:formData.phone, email:formData.email, submitted:formData.submitted, summary:buildSummaryText()};
+    await emailjs.send(C.sid, C.tid, params);
+    statusEl.className='ht ok';statusEl.innerHTML='<span>✅</span><span>通知邮件已自动发送到顾问邮箱（图片仍需下载ZIP另行发送）</span>';
+  }catch(err){
+    console.error('EmailJS send failed:', err);
+    const msg=(err&&err.text)||(err&&err.message)||String(err);
+    statusEl.className='ht wa';statusEl.innerHTML='<span>⚠️</span><span>自动发送邮件失败：'+msg+'，请下载ZIP后手动发送</span>';
+  }
+}
+
+async function dl(){const zip=new JSZip();const folder=zip.folder(formData.ref);folder.file('申请资料_'+formData.name+'.txt',JSON.stringify(formData,null,2));const imgFolder=folder.folder('图片资料');for(const[key, files]of Object.entries(fileMap)){if(files&&files.length>0){const sub=imgFolder.folder(key);for(let i=0;i<files.length;i++){const file=files[i];const ext=file.name.split('.').pop()||'jpg';sub.file(`${key}_${i+1}.${ext}`,file)}}}const blob=await zip.generateAsync({type:'blob'});saveAs(blob,formData.ref+'.zip')}
+
+function openConfig(){document.getElementById('cm').style.display='flex';document.getElementById('cem2').value=C.email||'';document.getElementById('cek').value=C.key||'';document.getElementById('ces').value=C.sid||'';document.getElementById('cet').value=C.tid||''}
+function saveConfig(){C={email:document.getElementById('cem2').value.trim(),key:document.getElementById('cek').value.trim(),sid:document.getElementById('ces').value.trim(),tid:document.getElementById('cet').value.trim()};localStorage.setItem('vc',JSON.stringify(C));updateModeIndicator();alert('配置已保存！');document.getElementById('cm').style.display='none'}
+
+window.addEventListener('DOMContentLoaded',()=>{if(/MicroMessenger/i.test(navigator.userAgent))document.getElementById('wt').style.display='flex';loadDraft();updateProgress();updateButtons();updateModeIndicator()});
+</script>
+</body>
+</html>
