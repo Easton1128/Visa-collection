@@ -98,8 +98,11 @@ select.in{padding-right:40px}
 .md{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;margin-left:8px}
 .md-of{background:#fce8e6;color:#c5221f}
 .md-em{background:#e6f4ea;color:#137333}
-.cm{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:20px}
-.cm-c{background:#fff;border-radius:var(--r);max-width:420px;width:100%;max-height:90vh;overflow-y:auto;padding:24px}
+#previewContent h3{font-size:14px;color:#1557b0;margin:16px 0 6px;border-left:4px solid var(--p);padding-left:8px}
+#previewContent table{width:100%;border-collapse:collapse;margin-bottom:4px}
+#previewContent td{padding:8px 6px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+#previewContent td.k{width:110px;color:var(--ts);font-weight:600;white-space:nowrap}
+#previewContent td.v{white-space:pre-line}
 </style>
 </head>
 <body>
@@ -125,6 +128,7 @@ select.in{padding-right:40px}
 <div class="fg"><label>电子邮箱<span class="rq">*</span></label><input type="email" class="in" id="em" name="em" placeholder="用于接收确认通知"></div>
 <div class="fg"><label>西班牙居留证号（NIE）<span class="op">选填</span></label><input type="text" class="in" id="nie" name="nie" placeholder="例如：X2654728R" style="text-transform:uppercase"></div>
 <div class="fg"><label>居留类型<span class="op">选填</span></label><div class="sw"><select class="in" id="nieType" name="nieType"><option value="permanent">长期居留</option><option value="temporary">临时居留</option><option value="student">学生居留</option><option value="work">工作居留</option><option value="other">其他</option></select></div></div>
+<div class="fg"><label>婚姻状况<span class="rq">*</span></label><div class="sw"><select class="in" id="marital"><option value="single">未婚</option><option value="married">已婚</option><option value="divorced">离异</option><option value="widowed">丧偶</option></select></div></div>
 </div></div>
 
 <div class="sc" data-s="2">
@@ -140,9 +144,29 @@ select.in{padding-right:40px}
 <div id="cem">
 <div class="ca"><div class="ca-t"><span class="ca-i">💼</span>职业信息</div><div class="ca-s">请如实填写您的职业状况</div>
 <div class="fg"><label>就业类型<span class="rq">*</span></label><div class="rg"><div class="ri"><input type="radio" id="e1" name="et" value="employed" checked><label for="e1">受雇员工</label></div><div class="ri"><input type="radio" id="e2" name="et" value="self"><label for="e2">自雇/个体户</label></div><div class="ri"><input type="radio" id="e3" name="et" value="student"><label for="e3">学生</label></div><div class="ri"><input type="radio" id="e4" name="et" value="retired"><label for="e4">退休</label></div></div></div>
-<div id="ef"><div class="fg"><label>工作单位及职务<span class="rq">*</span></label><textarea class="in" id="wd" rows="3" placeholder="单位名称、详细地址、职务、月薪、入职时间、单位电话"></textarea></div></div>
-<div id="sf" class="hd2"><div class="fg"><label>店铺/公司信息<span class="rq">*</span></label><textarea class="in" id="bi" rows="3" placeholder="公司/店铺名称、注册时间、详细地址、经营范围、月均收入、员工数量"></textarea></div><div class="fg"><label>营业执照/税务证明<span class="op">选填</span></label><div class="uz"><div class="ui">📁</div><div class="ut">上传营业执照等</div><div class="ubg"><label class="ubtn" for="p4c">📷 拍照</label><label class="ubtn ubtn2" for="p4l">🖼️ 相册/文件</label></div><input type="file" id="p4c" accept="image/*" capture="environment" class="hf"><input type="file" id="p4l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp4"></div></div></div>
-<div id="stf" class="hd2"><div class="fg"><label>学校信息<span class="rq">*</span></label><textarea class="in" id="si" rows="2" placeholder="学校名称、地址、专业、在读年级"></textarea></div></div>
+<div class="fg"><label>职务/职业<span class="rq">*</span></label><input type="text" class="in" id="jobTitle" placeholder="例如：厨师、店长、销售经理"></div>
+<div id="ef">
+<div class="fg"><label>单位名称（西班牙语）<span class="rq">*</span></label><input type="text" class="in" id="wd_name" placeholder="例如：Restaurante Dragón de Oro S.L."></div>
+<div class="fg"><label>单位地址<span class="rq">*</span></label><textarea class="in" id="wd_addr" rows="2" placeholder="例如：Calle Colón 45, Valencia, 46004"></textarea></div>
+<div class="fg"><label>单位联系人/电话<span class="rq">*</span></label><input type="text" class="in" id="wd_contact" placeholder="例如：老板 Juan / +34 600 111 222"></div>
+<div class="fg"><label>入职月年<span class="rq">*</span></label><input type="month" class="in" id="wd_since"></div>
+</div>
+<div id="sf" class="hd2">
+<div class="fg"><label>店铺/公司名称<span class="rq">*</span></label><input type="text" class="in" id="biz_name" placeholder="例如：Bazar Oriental S.L."></div>
+<div class="fg"><label>店铺/公司地址<span class="rq">*</span></label><textarea class="in" id="biz_addr" rows="2" placeholder="例如：Avenida del Cid 20, Valencia, 46018"></textarea></div>
+<div class="fg"><label>联系电话<span class="rq">*</span></label><input type="text" class="in" id="biz_contact" placeholder="例如：+34 600 222 333"></div>
+<div class="fg"><label>注册/开店月年<span class="rq">*</span></label><input type="month" class="in" id="biz_since"></div>
+<div class="fg"><label>经营范围<span class="rq">*</span></label><div class="sw"><select class="in" id="biz_type"><option value="restaurant">餐饮</option><option value="retail">零售/百货</option><option value="wholesale">批发/贸易</option><option value="service">服务业</option><option value="other">其他</option></select></div></div>
+<div class="fg"><label>月均收入（欧元）<span class="op">选填</span></label><input type="number" class="in" id="biz_income" placeholder="例如：3000"></div>
+<div class="fg"><label>员工数量<span class="op">选填</span></label><input type="number" class="in" id="biz_employees" placeholder="例如：3"></div>
+<div class="fg"><label>营业执照/税务证明<span class="op">选填</span></label><div class="uz"><div class="ui">📁</div><div class="ut">上传营业执照等</div><div class="ubg"><label class="ubtn" for="p4c">📷 拍照</label><label class="ubtn ubtn2" for="p4l">🖼️ 相册/文件</label></div><input type="file" id="p4c" accept="image/*" capture="environment" class="hf"><input type="file" id="p4l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp4"></div></div>
+</div>
+<div id="stf" class="hd2">
+<div class="fg"><label>学校名称<span class="rq">*</span></label><input type="text" class="in" id="school_name" placeholder="例如：Universidad de Valencia"></div>
+<div class="fg"><label>学校地址<span class="rq">*</span></label><textarea class="in" id="school_addr" rows="2" placeholder="例如：Avenida Blasco Ibáñez 13, Valencia"></textarea></div>
+<div class="fg"><label>专业<span class="rq">*</span></label><input type="text" class="in" id="school_major" placeholder="例如：国际贸易"></div>
+<div class="fg"><label>在读年级<span class="rq">*</span></label><div class="sw"><select class="in" id="school_grade"><option value="y1">大一</option><option value="y2">大二</option><option value="y3">大三</option><option value="y4">大四</option><option value="grad">研究生</option><option value="phd">博士</option><option value="other">其他</option></select></div></div>
+</div>
 </div>
 <div class="ca"><div class="ca-t"><span class="ca-i">💰</span>财务证明</div><div class="ca-s">证明您有足够的资金支持此次旅行</div>
 <div class="fg"><label>银行流水/存款证明<span class="op">选填</span></label><div class="uz"><div class="ui">🏦</div><div class="ut">上传银行流水或存款证明</div><div class="uh">建议提供近3-6个月流水</div><div class="ubg"><label class="ubtn" for="p5c">📷 拍照</label><label class="ubtn ubtn2" for="p5l">🖼️ 相册/文件</label></div><input type="file" id="p5c" accept="image/*" capture="environment" class="hf"><input type="file" id="p5l" accept="image/*,.pdf" multiple class="hf"></div><div class="pv hd2" id="pp5"></div></div>
@@ -179,9 +203,6 @@ select.in{padding-right:40px}
 </div>
 
 <div class="sc" data-s="4">
-<div class="ca"><div class="ca-t"><span class="ca-i">👨‍👩‍👧‍👦</span>家庭信息</div><div class="ca-s">父母、配偶、子女的基本信息（请详细填写）</div>
-<div class="fg"><label>家庭成员信息（概述）<span class="rq">*</span></label><textarea class="in" id="fi" rows="5" placeholder="请按以下格式填写：&#10;&#10;父亲：姓名、出生日期、现居住地&#10;母亲：姓名、出生日期、现居住地&#10;配偶：姓名、出生日期、身份证号/护照号&#10;子女：姓名、出生日期（如有）"></textarea><div class="ht"><span>💡</span><span>如家人在目的地国家，请特别注明其身份状态</span></div></div></div>
-
 <div class="ca">
   <div class="ca-t"><span class="ca-i">👪</span>配偶及直系亲属详细信息</div>
   <div class="ca-s">请分别填写配偶、父母、子女的姓名、出生日期，及是否一同前往美国</div>
@@ -212,17 +233,25 @@ select.in{padding-right:40px}
   </div>
   <div class="fg"><label><input type="checkbox" id="same_mail"> 护照回邮地址同现住址</label></div>
   <div class="fg"><label>护照回邮地址（如不同请填写）</label><textarea class="in" id="mail_address" rows="3" placeholder="例如：Calle Mayor 12, 3º B, Valencia, 46001"></textarea></div>
+  <div class="fg"><label>是否曾获得过签证（任意国家）</label>
+    <div class="rg"><div class="ri"><input type="radio" id="ever_no" name="everGranted" value="no" checked><label for="ever_no">否</label></div><div class="ri"><input type="radio" id="ever_yes" name="everGranted" value="yes"><label for="ever_yes">是</label></div></div>
+  </div>
   <div class="fg"><label>是否有过签证拒签记录？</label>
     <div class="rg"><div class="ri"><input type="radio" id="refusal_no" name="refusal" value="no" checked><label for="refusal_no">否</label></div><div class="ri"><input type="radio" id="refusal_yes" name="refusal" value="yes"><label for="refusal_yes">是</label></div></div>
   </div>
   <div id="refusal_details_div" class="hd2">
-    <div class="fg"><label>拒签详情（请说明国家、日期、原因）</label><textarea class="in" id="refusal_details" rows="3" placeholder="例如：2022年美国B1/B2拒签，原因是214(b)"></textarea></div>
+    <div class="fg"><label>拒签类型</label><div class="sw"><select class="in" id="refusalType"><option value="214b">214(b) 移民倾向证明不足</option><option value="221g">221(g) 材料待补充</option><option value="fraud">材料真实性存疑</option><option value="funds">资金证明不足</option><option value="other">其他/不确定</option></select></div></div>
+    <div class="fg"><label>拒签详情（请说明国家、日期、补充说明）</label><textarea class="in" id="refusal_details" rows="3" placeholder="例如：2022年美国B1/B2拒签"></textarea></div>
   </div>
 </div>
 
 <div id="us" class="ca"><div class="ca-t"><span class="ca-i">💬</span>社交媒体账号</div><div class="ca-s">DS-160要求申报近5年使用过的社交媒体</div>
 <div class="fg"><label>社交平台账号<span class="rq">*</span></label><textarea class="in" id="sm" rows="3" placeholder="例如：&#10;微信：微信号xxx&#10;抖音：抖音号xxx&#10;Instagram：账号xxx&#10;Facebook：账号xxx（如有）"></textarea><div class="ht if"><span>ℹ️</span><span>请尽量完整填写，没有账号可填&quot;无&quot;</span></div></div></div>
-<div class="ca" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1px solid #c8e6c9;"><div class="fg" style="margin-bottom:0"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="cf" style="width:18px;height:18px;accent-color:var(--s)"><span style="font-size:14px">我确认以上填写的所有信息真实准确，理解虚假陈述可能导致签证拒签</span></label></div></div>
+</div>
+
+<div class="sc" data-s="5">
+<div class="ca"><div class="ca-t"><span class="ca-i">🔍</span>确认预览</div><div class="ca-s">请仔细核对以下信息，确认无误后再提交</div><div id="previewContent"></div></div>
+<div class="ca" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1px solid #c8e6c9;"><div class="fg" style="margin-bottom:0"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="cf" style="width:18px;height:18px;accent-color:var(--s)"><span style="font-size:14px">我已仔细核对以上全部信息，确认真实准确，理解虚假陈述可能导致签证拒签</span></label></div></div>
 </div>
 
 <div class="sc" data-s="ok">
@@ -235,7 +264,7 @@ select.in{padding-right:40px}
 <div class="bb" id="bb"><button type="button" class="bt bt-s hd2" id="pb2" onclick="cs2(-1)">← 上一步</button><button type="button" class="bt bt-p" id="nb" onclick="cs2(1)">下一步 →</button></div>
 
 <script>
-const C={email:'jason0312chan@gmail.com',key:'X7T9PqnsBhSlJMJC_',sid:'service_lfxxxmz',tid:'template_contact'};let step=1, totalSteps=4, currentVisa='usa', fileMap={}, formData={};
+const C={email:'jason0312chan@gmail.com',key:'X7T9PqnsBhSlJMJC_',sid:'service_lfxxxmz',tid:'template_contact'};let step=1, totalSteps=5, currentVisa='usa', fileMap={}, formData={};
 
 function updateModeIndicator(){const on=!!(C.key&&C.sid&&C.tid);const mi=document.getElementById('mi');mi.textContent=on?'自动邮件已配置':'离线模式';mi.className='md '+(on?'md-em':'md-of')}
 
@@ -266,7 +295,7 @@ function validateStep(s){
       const email=document.getElementById('em').value;
       if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){document.getElementById('em').classList.add('er');alert('邮箱格式不正确');return false}
     }
-    if(s===4 && !document.getElementById('cf').checked){alert('请勾选确认信息真实准确');return false}
+    if(s===5 && !document.getElementById('cf').checked){alert('请勾选确认信息真实准确');return false}
     return valid;
   }catch(err){
     console.error('validateStep error:',err);
@@ -278,9 +307,13 @@ function cs2(delta){
   try{
     if(delta>0 && !validateStep(step)) return;
     let newStep=step+delta;
-    if(newStep<1 || newStep>totalSteps){ if(newStep>totalSteps) submitForm(); return }
+    if(newStep<1 || newStep>totalSteps){
+      if(newStep>totalSteps){ if(confirm('请再次确认所有信息真实准确，确定提交吗？')) submitForm(); }
+      return;
+    }
     document.querySelector(`.sc[data-s="${step}"]`).classList.remove('on');
     step=newStep;
+    if(step===5) renderPreview();
     document.querySelector(`.sc[data-s="${step}"]`).classList.add('on');
     updateProgress();updateButtons();autoSave();
     window.scrollTo({top:0,behavior:'smooth'});
@@ -326,31 +359,43 @@ sameMail.addEventListener('change', function() {
 });
 homeAddr.addEventListener('input', function() { if (sameMail.checked) mailAddr.value = this.value; });
 
-async function submitForm(){const btn=document.getElementById('nb');btn.disabled=true;btn.innerHTML='<span>⏳</span>处理中...';const ref=currentVisa.toUpperCase()+'-'+Date.now().toString(36).toUpperCase();formData={visa:currentVisa, ref:ref, submitted:new Date().toLocaleString('zh-CN'), name:document.getElementById('cn').value, pinyin:document.getElementById('ce').value, passport:document.getElementById('pn').value, phone:document.getElementById('ph').value, email:document.getElementById('em').value, nie:document.getElementById('nie')?.value||'', nieType:document.getElementById('nieType')?.value||'', employment:document.querySelector('input[name="et"]:checked')?.value||'', work:document.getElementById('wd')?.value||'', business:document.getElementById('bi')?.value||'', school:document.getElementById('si')?.value||'', assets:document.getElementById('ai')?.value||'', family:document.getElementById('fi').value, social:document.getElementById('sm')?.value||'', travelPurpose:document.getElementById('tp')?.value||'', entryDate:document.getElementById('ed')?.value||'', exitDate:document.getElementById('xd')?.value||'', destination:document.getElementById('dc')?.value||'', hotel:document.getElementById('hi')?.value||'', insurance:document.getElementById('in2')?.value||'', history:document.getElementById('sh')?.value||'', uci:document.getElementById('uc')?.value||'', canadaPurpose:document.getElementById('cp')?.value||'', canadaContact:document.getElementById('cc')?.value||'', canadaHistory:document.getElementById('ch')?.value||'', ukType:document.getElementById('uk')?.value||'', cas:document.getElementById('ca2')?.value||'', ukAccommodation:document.getElementById('ua')?.value||'',
-spouse_name:document.getElementById('spouse_name').value,
-spouse_dob:document.getElementById('spouse_dob').value,
-spouse_accompany:document.getElementById('spouse_accompany').checked,
-father_name:document.getElementById('father_name').value,
-father_dob:document.getElementById('father_dob').value,
-father_accompany:document.getElementById('father_accompany').checked,
-mother_name:document.getElementById('mother_name').value,
-mother_dob:document.getElementById('mother_dob').value,
-mother_accompany:document.getElementById('mother_accompany').checked,
-child1_name:document.getElementById('child1_name').value,
-child1_dob:document.getElementById('child1_dob').value,
-child1_accompany:document.getElementById('child1_accompany').checked,
-child2_name:document.getElementById('child2_name').value,
-child2_dob:document.getElementById('child2_dob').value,
-child2_accompany:document.getElementById('child2_accompany').checked,
-home_address:document.getElementById('home_address').value,
-home_ownership:document.getElementById('home_ownership').value,
-mail_address:document.getElementById('mail_address').value,
-refusal:document.querySelector('input[name="refusal"]:checked')?.value||'no',
-refusal_details:document.getElementById('refusal_details').value,
-};document.querySelectorAll('.sc').forEach(e=>e.classList.remove('on'));document.querySelector('.sc[data-s="ok"]').classList.add('on');document.getElementById('rn').textContent=ref;document.getElementById('bb').style.display='none';document.getElementById('pb').style.display='none';document.getElementById('px').textContent='完成';document.getElementById('pf').style.width='100%';const isWX=/MicroMessenger/i.test(navigator.userAgent);document.getElementById('sm2').textContent=isWX?'您的资料已提交，文字信息将自动发邮件给顾问。':'您的资料已打包完成，请下载后发送给顾问（图片资料需通过下载的ZIP发送，邮件仅发送文字摘要）。';document.getElementById('wxNote').classList.toggle('hd2',!isWX);document.getElementById('da').classList.remove('hd2');localStorage.removeItem('vc_d');localStorage.removeItem('vc_t');if(navigator.vibrate)navigator.vibrate([100,50,100]);sendNotifyEmail()}
+function collectFormData(){
+  return {
+    visa:currentVisa,
+    name:document.getElementById('cn').value, pinyin:document.getElementById('ce').value, passport:document.getElementById('pn').value, phone:document.getElementById('ph').value, email:document.getElementById('em').value, nie:document.getElementById('nie')?.value||'', nieType:document.getElementById('nieType')?.value||'', marital:document.getElementById('marital')?.value||'',
+    employment:document.querySelector('input[name="et"]:checked')?.value||'', jobTitle:document.getElementById('jobTitle')?.value||'',
+    wd_name:document.getElementById('wd_name')?.value||'', wd_addr:document.getElementById('wd_addr')?.value||'', wd_contact:document.getElementById('wd_contact')?.value||'', wd_since:document.getElementById('wd_since')?.value||'',
+    biz_name:document.getElementById('biz_name')?.value||'', biz_addr:document.getElementById('biz_addr')?.value||'', biz_contact:document.getElementById('biz_contact')?.value||'', biz_since:document.getElementById('biz_since')?.value||'', biz_type:document.getElementById('biz_type')?.value||'', biz_income:document.getElementById('biz_income')?.value||'', biz_employees:document.getElementById('biz_employees')?.value||'',
+    school_name:document.getElementById('school_name')?.value||'', school_addr:document.getElementById('school_addr')?.value||'', school_major:document.getElementById('school_major')?.value||'', school_grade:document.getElementById('school_grade')?.value||'',
+    assets:document.getElementById('ai')?.value||'', social:document.getElementById('sm')?.value||'',
+    travelPurpose:document.getElementById('tp')?.value||'', entryDate:document.getElementById('ed')?.value||'', exitDate:document.getElementById('xd')?.value||'', destination:document.getElementById('dc')?.value||'', hotel:document.getElementById('hi')?.value||'', insurance:document.getElementById('in2')?.value||'', history:document.getElementById('sh')?.value||'',
+    uci:document.getElementById('uc')?.value||'', canadaPurpose:document.getElementById('cp')?.value||'', canadaContact:document.getElementById('cc')?.value||'', canadaHistory:document.getElementById('ch')?.value||'',
+    ukType:document.getElementById('uk')?.value||'', cas:document.getElementById('ca2')?.value||'', ukAccommodation:document.getElementById('ua')?.value||'',
+    spouse_name:document.getElementById('spouse_name').value, spouse_dob:document.getElementById('spouse_dob').value, spouse_accompany:document.getElementById('spouse_accompany').checked,
+    father_name:document.getElementById('father_name').value, father_dob:document.getElementById('father_dob').value, father_accompany:document.getElementById('father_accompany').checked,
+    mother_name:document.getElementById('mother_name').value, mother_dob:document.getElementById('mother_dob').value, mother_accompany:document.getElementById('mother_accompany').checked,
+    child1_name:document.getElementById('child1_name').value, child1_dob:document.getElementById('child1_dob').value, child1_accompany:document.getElementById('child1_accompany').checked,
+    child2_name:document.getElementById('child2_name').value, child2_dob:document.getElementById('child2_dob').value, child2_accompany:document.getElementById('child2_accompany').checked,
+    home_address:document.getElementById('home_address').value, home_ownership:document.getElementById('home_ownership').value, mail_address:document.getElementById('mail_address').value,
+    everGranted:document.querySelector('input[name="everGranted"]:checked')?.value||'no',
+    refusal:document.querySelector('input[name="refusal"]:checked')?.value||'no', refusalType:document.getElementById('refusalType')?.value||'', refusal_details:document.getElementById('refusal_details').value
+  };
+}
+
+function renderPreview(){
+  document.getElementById('previewContent').innerHTML = buildInfoSections(collectFormData());
+}
+
+async function submitForm(){const btn=document.getElementById('nb');btn.disabled=true;btn.innerHTML='<span>⏳</span>处理中...';const ref=currentVisa.toUpperCase()+'-'+Date.now().toString(36).toUpperCase();formData={...collectFormData(), ref, submitted:new Date().toLocaleString('zh-CN')};document.querySelectorAll('.sc').forEach(e=>e.classList.remove('on'));document.querySelector('.sc[data-s="ok"]').classList.add('on');document.getElementById('rn').textContent=ref;document.getElementById('bb').style.display='none';document.getElementById('pb').style.display='none';document.getElementById('px').textContent='完成';document.getElementById('pf').style.width='100%';const isWX=/MicroMessenger/i.test(navigator.userAgent);document.getElementById('sm2').textContent=isWX?'您的资料已提交，文字信息将自动发邮件给顾问。':'您的资料已打包完成，请下载后发送给顾问（图片资料需通过下载的ZIP发送，邮件仅发送文字摘要）。';document.getElementById('wxNote').classList.toggle('hd2',!isWX);document.getElementById('da').classList.remove('hd2');localStorage.removeItem('vc_d');localStorage.removeItem('vc_t');if(navigator.vibrate)navigator.vibrate([100,50,100]);sendNotifyEmail()}
 
 function buildSummaryText(){const f=formData;const visaName={usa:'美国',france:'法国/申根',canada:'加拿大',uk:'英国'}[f.visa]||f.visa;
-let t=`【签证资料提交通知】\n编号：${f.ref}　签证类型：${visaName}　提交时间：${f.submitted}\n\n— 基础信息 —\n姓名：${f.name}（${f.pinyin}）\n护照号：${f.passport}　电话：${f.phone}　邮箱：${f.email}\n西班牙居留证号：${f.nie||'无'}　居留类型：${({permanent:'长期居留',temporary:'临时居留',student:'学生居留',work:'工作居留',other:'其他'})[f.nieType]||'无'}\n\n— 职业/财务 —\n就业类型：${f.employment}\n工作信息：${f.work||f.business||f.school||''}\n资产证明：${f.assets||'无'}\n\n— 家庭信息 —\n${f.family}\n配偶：${f.spouse_name||'无'} ${f.spouse_dob||''} ${f.spouse_accompany?'（同行）':''}\n父亲：${f.father_name||'无'} ${f.father_dob||''} ${f.father_accompany?'（同行）':''}\n母亲：${f.mother_name||'无'} ${f.mother_dob||''} ${f.mother_accompany?'（同行）':''}\n子女1：${f.child1_name||'无'} ${f.child1_dob||''} ${f.child1_accompany?'（同行）':''}\n子女2：${f.child2_name||'无'} ${f.child2_dob||''} ${f.child2_accompany?'（同行）':''}\n\n— 住址与背景 —\n现住址：${f.home_address}（${f.home_ownership==='own'?'自购':f.home_ownership==='rent'?'租赁':'其他'}）\n回邮地址：${f.mail_address||'同现住址'}\n拒签记录：${f.refusal==='yes'?'有 - '+f.refusal_details:'无'}\n\n— 社交媒体 —\n${f.social||'无'}\n\n⚠️护照/身份证/照片等图片资料未随邮件发送，请查收客户下载并发来的ZIP资料包。`;
+const maritalMap={single:'未婚',married:'已婚',divorced:'离异',widowed:'丧偶'};
+const empName={employed:'受雇员工',self:'自雇/个体户',student:'学生',retired:'退休'}[f.employment]||f.employment;
+let workInfo='';
+if(f.employment==='self')workInfo=`店铺/公司名称：${f.biz_name||'无'}\n地址：${f.biz_addr||'无'}　联系电话：${f.biz_contact||'无'}\n注册/开店月年：${f.biz_since||'无'}　经营范围：${({restaurant:'餐饮',retail:'零售/百货',wholesale:'批发/贸易',service:'服务业',other:'其他'})[f.biz_type]||'无'}\n月均收入：${f.biz_income||'无'}　员工数量：${f.biz_employees||'无'}`;
+else if(f.employment==='student')workInfo=`学校名称：${f.school_name||'无'}\n地址：${f.school_addr||'无'}　专业：${f.school_major||'无'}\n年级：${({y1:'大一',y2:'大二',y3:'大三',y4:'大四',grad:'研究生',phd:'博士',other:'其他'})[f.school_grade]||'无'}`;
+else workInfo=`单位名称：${f.wd_name||'无'}\n单位地址：${f.wd_addr||'无'}　单位联系人/电话：${f.wd_contact||'无'}\n入职月年：${f.wd_since||'无'}`;
+let t=`【签证资料提交通知】\n编号：${f.ref}　签证类型：${visaName}　提交时间：${f.submitted}\n\n— 基础信息 —\n姓名：${f.name}（${f.pinyin}）\n护照号：${f.passport}　电话：${f.phone}　邮箱：${f.email}\n西班牙居留证号：${f.nie||'无'}　居留类型：${({permanent:'长期居留',temporary:'临时居留',student:'学生居留',work:'工作居留',other:'其他'})[f.nieType]||'无'}\n婚姻状况：${maritalMap[f.marital]||'无'}\n\n— 职业/财务 —\n就业类型：${empName}　职务/职业：${f.jobTitle||'无'}\n${workInfo}\n资产证明：${f.assets||'无'}\n\n— 家庭信息 —\n配偶：${f.spouse_name||'无'} ${f.spouse_dob||''} ${f.spouse_accompany?'（同行）':''}\n父亲：${f.father_name||'无'} ${f.father_dob||''} ${f.father_accompany?'（同行）':''}\n母亲：${f.mother_name||'无'} ${f.mother_dob||''} ${f.mother_accompany?'（同行）':''}\n子女1：${f.child1_name||'无'} ${f.child1_dob||''} ${f.child1_accompany?'（同行）':''}\n子女2：${f.child2_name||'无'} ${f.child2_dob||''} ${f.child2_accompany?'（同行）':''}\n\n— 住址与背景 —\n现住址：${f.home_address}（${f.home_ownership==='own'?'自购':f.home_ownership==='rent'?'租赁':'其他'}）\n回邮地址：${f.mail_address||'同现住址'}\n曾获签证：${f.everGranted==='yes'?'是':'否'}\n拒签记录：${f.refusal==='yes'?(({'214b':'214(b) 移民倾向证明不足','221g':'221(g) 材料待补充',fraud:'材料真实性存疑',funds:'资金证明不足',other:'其他/不确定'})[f.refusalType]||'')+'；'+f.refusal_details:'无'}\n\n— 社交媒体 —\n${f.social||'无'}\n\n⚠️护照/身份证/照片等图片资料未随邮件发送，请查收客户下载并发来的ZIP资料包。`;
 if(f.visa==='france')t+=`\n\n— 申根行程 —\n目的：${f.travelPurpose}　入境：${f.entryDate}　离境：${f.exitDate}\n目的地：${f.destination}\n住宿：${f.hotel}\n保险单号：${f.insurance}`;
 if(f.visa==='canada')t+=`\n\n— 加拿大补充 —\nUCI：${f.uci||'无'}　目的：${f.canadaPurpose}\n联系人：${f.canadaContact||'无'}`;
 if(f.visa==='uk')t+=`\n\n— 英国补充 —\n类别：${f.ukType}　CAS：${f.cas||'无'}\n住宿：${f.ukAccommodation||'无'}`;
@@ -389,14 +434,38 @@ async function sendNotifyEmail(){
 const DOC_LABELS={p1:'01_护照首页',p2:'02_身份证正反面',p3:'03_签证照片',p4:'04_营业执照或税务证明',p5:'05_银行流水或存款证明',p6:'06_保险单',p7:'07_肺结核检测证书'};
 function V(x){return (x&&String(x).trim())?x:'未填写'}
 
-function buildReportHTML(){
-  const f=formData;const visaName={usa:'美国',france:'法国/申根',canada:'加拿大',uk:'英国'}[f.visa]||f.visa;
+function buildInfoSections(f){
+  const visaName={usa:'美国',france:'法国/申根',canada:'加拿大',uk:'英国'}[f.visa]||f.visa;
   const row=(k,v)=>`<tr><td class="k">${k}</td><td class="v">${V(v)}</td></tr>`;
+  const fam=(n,d,a)=>[V(n), d||'', a?'（同行）':''].filter(Boolean).join(' ');
+  const maritalMap={single:'未婚',married:'已婚',divorced:'离异',widowed:'丧偶'};
+  const empName={employed:'受雇员工',self:'自雇/个体户',student:'学生',retired:'退休'}[f.employment]||f.employment;
+  let workRows='';
+  if(f.employment==='self')workRows=`${row('店铺/公司名称',f.biz_name)}${row('店铺/公司地址',f.biz_addr)}${row('联系电话',f.biz_contact)}${row('注册/开店月年',f.biz_since)}${row('经营范围',{restaurant:'餐饮',retail:'零售/百货',wholesale:'批发/贸易',service:'服务业',other:'其他'}[f.biz_type])}${row('月均收入',f.biz_income)}${row('员工数量',f.biz_employees)}`;
+  else if(f.employment==='student')workRows=`${row('学校名称',f.school_name)}${row('学校地址',f.school_addr)}${row('专业',f.school_major)}${row('在读年级',{y1:'大一',y2:'大二',y3:'大三',y4:'大四',grad:'研究生',phd:'博士',other:'其他'}[f.school_grade])}`;
+  else workRows=`${row('单位名称',f.wd_name)}${row('单位地址',f.wd_addr)}${row('单位联系人/电话',f.wd_contact)}${row('入职月年',f.wd_since)}`;
   let extra='';
   if(f.visa==='france')extra=`<h3>申根行程信息</h3><table>${row('旅行目的',{tourism:'旅游观光',business:'商务访问',family:'探亲访友',medical:'医疗'}[f.travelPurpose]||f.travelPurpose)}${row('入境日期',f.entryDate)}${row('离境日期',f.exitDate)}${row('目的地',f.destination)}${row('住宿',f.hotel)}${row('保险单号',f.insurance)}${row('近5年申根记录',f.history)}</table>`;
   else if(f.visa==='canada')extra=`<h3>加拿大补充信息</h3><table>${row('UCI号码',f.uci)}${row('旅行目的',f.canadaPurpose)}${row('邀请人/联系人',f.canadaContact)}${row('美加旅行历史',f.canadaHistory)}</table>`;
   else if(f.visa==='uk')extra=`<h3>英国补充信息</h3><table>${row('签证类别',f.ukType)}${row('CAS号码',f.cas)}${row('英国住宿安排',f.ukAccommodation)}</table>`;
-  const fam=(n,d,a)=>[V(n), d||'', a?'（同行）':''].filter(Boolean).join(' ');
+  const refusalTypeMap={'214b':'214(b) 移民倾向证明不足','221g':'221(g) 材料待补充',fraud:'材料真实性存疑',funds:'资金证明不足',other:'其他/不确定'};
+  return `
+<h3>基础信息</h3><table>${row('姓名',f.name)}${row('拼音',f.pinyin)}${row('护照号',f.passport)}${row('电话',f.phone)}${row('邮箱',f.email)}${row('西班牙居留证号',f.nie)}${row('居留类型',{permanent:'长期居留',temporary:'临时居留',student:'学生居留',work:'工作居留',other:'其他'}[f.nieType])}${row('婚姻状况',maritalMap[f.marital])}</table>
+<h3>职业与财务</h3><table>${row('就业类型',empName)}${row('职务/职业',f.jobTitle)}${workRows}${row('资产证明',f.assets)}</table>
+<h3>配偶及直系亲属</h3><table>
+${row('配偶',fam(f.spouse_name,f.spouse_dob,f.spouse_accompany))}
+${row('父亲',fam(f.father_name,f.father_dob,f.father_accompany))}
+${row('母亲',fam(f.mother_name,f.mother_dob,f.mother_accompany))}
+${row('子女1',fam(f.child1_name,f.child1_dob,f.child1_accompany))}
+${row('子女2',fam(f.child2_name,f.child2_dob,f.child2_accompany))}
+</table>
+<h3>住址与背景</h3><table>${row('现住址',f.home_address)}${row('房屋所有权',{own:'自购',rent:'租赁',other:'其他'}[f.home_ownership])}${row('回邮地址',f.mail_address)}${row('曾获签证',f.everGranted==='yes'?'是':'否')}${row('拒签记录',f.refusal==='yes'?((refusalTypeMap[f.refusalType]||'')+'；'+f.refusal_details):'无')}</table>
+<h3>社交媒体账号</h3><table>${row('账号信息',f.social)}</table>
+${extra}`;
+}
+
+function buildReportHTML(){
+  const f=formData;const visaName={usa:'美国',france:'法国/申根',canada:'加拿大',uk:'英国'}[f.visa]||f.visa;
   return `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>资料清单-${f.name}</title><style>
 body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;max-width:720px;margin:32px auto;padding:0 20px;color:#1f1f1f;line-height:1.7}
 h1{font-size:20px;border-bottom:3px solid #1a73e8;padding-bottom:12px}
@@ -412,19 +481,7 @@ td.k{width:130px;color:#5f6368;font-weight:600;white-space:nowrap}
 <h1>🌍 签证资料清单 — ${visaName}签证</h1>
 <span class="ref">申请编号：${f.ref}</span>
 <p style="color:#5f6368;font-size:13px">提交时间：${f.submitted}</p>
-<h3>基础信息</h3><table>${row('姓名',f.name)}${row('拼音',f.pinyin)}${row('护照号',f.passport)}${row('电话',f.phone)}${row('邮箱',f.email)}${row('西班牙居留证号',f.nie)}${row('居留类型',{permanent:'长期居留',temporary:'临时居留',student:'学生居留',work:'工作居留',other:'其他'}[f.nieType]||f.nieType)}</table>
-<h3>职业与财务</h3><table>${row('就业类型',{employed:'受雇员工',self:'自雇/个体户',student:'学生',retired:'退休'}[f.employment]||f.employment)}${row('工作/经营/学校信息',f.work||f.business||f.school)}${row('资产证明',f.assets)}</table>
-<h3>家庭成员概述</h3><table>${row('概述',f.family)}</table>
-<h3>配偶及直系亲属</h3><table>
-${row('配偶',fam(f.spouse_name,f.spouse_dob,f.spouse_accompany))}
-${row('父亲',fam(f.father_name,f.father_dob,f.father_accompany))}
-${row('母亲',fam(f.mother_name,f.mother_dob,f.mother_accompany))}
-${row('子女1',fam(f.child1_name,f.child1_dob,f.child1_accompany))}
-${row('子女2',fam(f.child2_name,f.child2_dob,f.child2_accompany))}
-</table>
-<h3>住址与背景</h3><table>${row('现住址',f.home_address)}${row('房屋所有权',{own:'自购',rent:'租赁',other:'其他'}[f.home_ownership]||f.home_ownership)}${row('回邮地址',f.mail_address)}${row('拒签记录',f.refusal==='yes'?('有 — '+f.refusal_details):'无')}</table>
-<h3>社交媒体账号</h3><table>${row('账号信息',f.social)}</table>
-${extra}
+${buildInfoSections(f)}
 <div class="note">⚠️ 护照、身份证、签证照片等图片资料请查看本压缩包内「证件照片」文件夹，本文件仅为文字信息汇总，未包含图片。</div>
 </body></html>`;
 }
